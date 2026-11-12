@@ -1,0 +1,217 @@
+/* ============================================================
+   响应式适配 + 交互组件样式（后补）
+   说明：所有布局改动都放在媒体查询里，桌面端样式保持原样
+   ============================================================ */
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ---------- 移动端菜单按钮（默认隐藏）---------- */
+.nav-toggle {
+    display: none;
+    width: 100%;
+    padding: 10px 0;
+    background: #0e2a48;
+    color: #fff;
+    border: 0;
+    font-size: 15px;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+/* ---------- 返回顶部 ---------- */
+#backTop {
+    position: fixed;
+    right: 20px;
+    bottom: 24px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(14, 42, 72, .85);
+    color: #fff;
+    font-size: 18px;
+    line-height: 44px;
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+}
+
+#backTop.show {
+    display: block;
+}
+
+/* ---------- 图片灯箱 ---------- */
+#lightbox {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: zoom-out;
+}
+
+#lightbox.show {
+    display: flex;
+}
+
+#lightbox img {
+    max-width: 92vw;
+    max-height: 92vh;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .6);
+}
+
+/* ---------- 滚动淡入 ---------- */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .6s ease, transform .6s ease;
+}
+
+.reveal.in {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* ============================================================
+   平板：1024px 以下
+   ============================================================ */
+@media (max-width: 1024px) {
+    .nav {
+        height: auto;
+        padding-bottom: 10px;
+    }
+
+    .nav > ul {
+        margin-left: 0;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 6px;
+    }
+
+    .nav > ul > li {
+        float: none;
+        height: auto;
+        margin-right: 14px;
+    }
+
+    .nav > ul > li > a {
+        line-height: 2.4;
+        font-size: 15px;
+    }
+
+    .language > ul {
+        margin-right: 20px;
+    }
+
+    .continer {
+        width: 88%;
+    }
+}
+
+/* ============================================================
+   手机：768px 以下
+   ============================================================ */
+@media (max-width: 768px) {
+    .language {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .nav > ul {
+        display: none;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .nav.open > ul {
+        display: flex;
+    }
+
+    .nav > ul > li {
+        width: 100%;
+        margin-right: 0;
+        text-align: center;
+    }
+
+    .nav > ul > li > a {
+        line-height: 2.8;
+    }
+
+    .nav .banner p {
+        font-size: 20px;
+        padding: 12px 0;
+    }
+
+    .continer {
+        width: 94%;
+        padding-bottom: 40px;
+    }
+
+    /* 正文里的图片一律自适应 */
+    .continer img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* 原页面里写死宽度的块（680/900/540/460px 等）统一收进屏幕宽度 */
+    .continer *,
+    .footer * {
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* 页脚原本分栏，手机端改单列 */
+    .footer {
+        text-align: center;
+    }
+
+    /* 原来的左右分栏 / 浮动布局统一改单列 */
+    .left,
+    .right,
+    .top1 > div,
+    .top1 > .left,
+    .top1 > .right {
+        width: 100% !important;
+        float: none !important;
+        margin: 0 0 14px 0 !important;
+    }
+
+    h1 {
+        font-size: 22px;
+        line-height: 1.4;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    #backTop {
+        right: 12px;
+        bottom: 16px;
+    }
+}
