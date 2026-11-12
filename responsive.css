@@ -1,18 +1,68 @@
 /* ============================================================
-   响应式适配 + 交互组件样式（后补）
-   说明：所有布局改动都放在媒体查询里，桌面端样式保持原样
+   响应式适配（方案：整体等比缩放 + 手机端流式）
+   ------------------------------------------------------------
+   这个页面是按 1200px 设计稿用固定像素搭的：
+   左侧菜单 210 + 中间 680 + 右侧 250，首屏 600px 高。
+   如果强行改成百分比，栏内还有一堆写死的宽度会互相挤，
+   位置就全变了。所以桌面→平板这一档用 zoom 整体缩，
+   版式位置 100% 不变，图片自然跟着缩；
+   手机（≤700px）放不下三栏，才切换为流式单列。
    ============================================================ */
 
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
+/* ---------- 一、图片全局自适应 ---------- */
 img {
     max-width: 100%;
+    height: auto;
 }
 
-/* ---------- 移动端菜单按钮（默认隐藏）---------- */
+/* 正文配图：圆角 + 阴影 + 轻微悬停放大 */
+.continer img {
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
+    transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.continer img:hover {
+    transform: scale(1.012);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .2);
+}
+
+/* ---------- 二、背景图改为等比铺满（原 100% 100% 会压扁） ---------- */
+.banner,
+.tp,
+.zp,
+.cy {
+    background-size: cover !important;
+    background-position: center center !important;
+}
+
+/* ---------- 三、整页等比缩放，版式位置不变 ---------- */
+@media (max-width: 1280px) {
+    body {
+        zoom: 0.88;
+    }
+
+    /* 首屏标题不换行，否则「天府之国 巴蜀之地」会断成两行 */
+    .banner > p {
+        font-size: 64px;
+        margin-left: 52%;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 1100px) {
+    body {
+        zoom: 0.76;
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        zoom: 0.64;
+    }
+}
+
+/* ---------- 四、交互组件 ---------- */
 .nav-toggle {
     display: none;
     width: 100%;
@@ -25,7 +75,6 @@ img {
     cursor: pointer;
 }
 
-/* ---------- 返回顶部 ---------- */
 #backTop {
     position: fixed;
     right: 20px;
@@ -41,13 +90,13 @@ img {
     cursor: pointer;
     display: none;
     z-index: 999;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
 }
 
 #backTop.show {
     display: block;
 }
 
-/* ---------- 图片灯箱 ---------- */
 #lightbox {
     position: fixed;
     left: 0;
@@ -69,10 +118,11 @@ img {
 #lightbox img {
     max-width: 92vw;
     max-height: 92vh;
+    border-radius: 4px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, .6);
 }
 
-/* ---------- 滚动淡入 ---------- */
+/* ---------- 五、滚动淡入 ---------- */
 .reveal {
     opacity: 0;
     transform: translateY(16px);
@@ -90,50 +140,26 @@ img {
         transform: none;
         transition: none;
     }
-}
 
-/* ============================================================
-   平板：1024px 以下
-   ============================================================ */
-@media (max-width: 1024px) {
-    .nav {
-        height: auto;
-        padding-bottom: 10px;
-    }
-
-    .nav > ul {
-        margin-left: 0;
-        height: auto;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding-top: 6px;
-    }
-
-    .nav > ul > li {
-        float: none;
-        height: auto;
-        margin-right: 14px;
-    }
-
-    .nav > ul > li > a {
-        line-height: 2.4;
-        font-size: 15px;
-    }
-
-    .language > ul {
-        margin-right: 20px;
-    }
-
-    .continer {
-        width: 88%;
+    .continer img:hover {
+        transform: none;
     }
 }
 
 /* ============================================================
-   手机：768px 以下
+   手机：700px 以下 —— 取消缩放，改流式单列
    ============================================================ */
-@media (max-width: 768px) {
+@media (max-width: 700px) {
+    body {
+        zoom: 1;
+    }
+
+    /* 原 .header 写死 700px，首屏压到 200px 后会留下 380px 空白 */
+    .header {
+        height: auto;
+        margin-top: 0;
+    }
+
     .language {
         display: none;
     }
@@ -142,7 +168,13 @@ img {
         display: block;
     }
 
+    .nav {
+        height: auto;
+    }
+
     .nav > ul {
+        margin-left: 0;
+        height: auto;
         display: none;
         flex-direction: column;
         padding: 0;
@@ -153,7 +185,9 @@ img {
     }
 
     .nav > ul > li {
+        float: none;
         width: 100%;
+        height: auto;
         margin-right: 0;
         text-align: center;
     }
@@ -162,9 +196,16 @@ img {
         line-height: 2.8;
     }
 
-    .nav .banner p {
-        font-size: 20px;
-        padding: 12px 0;
+    .banner {
+        height: 200px;
+        background-size: cover;
+    }
+
+    .banner > p {
+        font-size: 22px;
+        margin-left: 18%;
+        margin-top: 12px;
+        text-shadow: 2px 2px 3px rgba(0, 0, 0, .4);
     }
 
     .continer {
@@ -172,42 +213,37 @@ img {
         padding-bottom: 40px;
     }
 
-    /* 正文里的图片一律自适应 */
     .continer img {
         max-width: 100% !important;
         height: auto !important;
+        border-radius: 4px;
     }
 
-    /* 原页面里写死宽度的块（680/900/540/460px 等）统一收进屏幕宽度 */
+    /* 三栏改单列 */
+    .continer>.top1 {
+        height: auto;
+        overflow: hidden;
+    }
+
+    .top1>.left,
+    .top1>.center,
+    .top1>.right {
+        float: none;
+        width: 100% !important;
+        height: auto;
+        margin: 0 0 14px 0;
+        box-sizing: border-box;
+    }
+
     .continer *,
     .footer * {
         max-width: 100% !important;
         box-sizing: border-box;
     }
 
-    /* 页脚原本分栏，手机端改单列 */
-    .footer {
-        text-align: center;
-    }
-
-    /* 原来的左右分栏 / 浮动布局统一改单列 */
-    .left,
-    .right,
-    .top1 > div,
-    .top1 > .left,
-    .top1 > .right {
-        width: 100% !important;
-        float: none !important;
-        margin: 0 0 14px 0 !important;
-    }
-
     h1 {
         font-size: 22px;
         line-height: 1.4;
-    }
-
-    h2 {
-        font-size: 18px;
     }
 
     #backTop {
